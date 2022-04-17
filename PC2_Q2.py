@@ -18,36 +18,52 @@
 #"""
 
 
-number_string = input("Enter the list of numbers with a space : ")
+def convertListToInt(stringList):
+  int_list = [int(i) for i in stringList]
+  return int_list
 
+def rotateElements(targetList):
+  #1.rotate the elements by 'k' position to right
+  k = int(input("Enter the value by which you want to rotate : "))
+  print("The list after rotating by",k,"position to right is ",end = " = ")
+  print(targetList[-k:]+targetList[:-k])
+
+def listToTuple(int_list):
+  #2.converting the list into a tuple
+  int_tuple = *(i for i in int_list),
+  print("List to Tuple = ",int_tuple)
+  return int_tuple
+
+def removeDuplicates(int_tuple):
+  #3.removing all duplicates
+  int_tuple = tuple(set(int_tuple))
+  int_list = list(int_tuple)
+  return int_list
+
+def mapToFunction(int_list):
+  #4.mapping the list to the function f(x) = x^2-x
+  square = [(i**2)-i for i in int_list]
+  print("Results of the Function f(x) = (x^2-1) = ",square)
+  return square
+
+def singleSortedList(int_list,function_list):
+  #5.merging the list in 4 and 5 into a single sorted list
+  sorted_list = int_list + function_list
+  sorted_list.sort()
+  print("Final Sorted List = ",sorted_list)
+
+number_string = input("Enter the list of numbers with a space : ")
+#list of strings
 list_numbers = list(number_string.split(" "))
 
-int_list = []
-for i in list_numbers:
-  int_list.append(int(i))
+#converting the list of string to list of integers.
+int_list = convertListToInt(list_numbers)
 print("The list of integers = ",int_list)
-
-
-k = int(input("Enter the value by which you want to rotate : "))
-print("The list after rotating by",k,"position to right is ",end = " = ")
-print(int_list[-k:]+int_list[:-k])
-
-
-int_tuple = tuple(int_list)
-print("List to Tuple = ",int_tuple)
-
-int_tuple = tuple(set(int_tuple))
-int_list = list(int_tuple)
-print("Tuple to list after removing duplicates ",end = " = ")
-print(int_list)
-
-square = []
-for i in int_list:
-  square.append((i**2)-i)
-print("Results of the Function ",end = " = ")
-print(square)
-
-sorted_list = int_list + square
-sorted_list.sort()
-print("Final Sorted List ",end = " = ")
-print(sorted_list)
+#rotating elements.
+rotateElements(int_list)
+#converting list to tuple.
+int_tuple = listToTuple(int_list)
+int_list = removeDuplicates(int_tuple)
+print("Tuple to list after removing duplicates = ",int_list)
+functionResult = mapToFunction(int_list)
+singleSortedList(int_list,functionResult)

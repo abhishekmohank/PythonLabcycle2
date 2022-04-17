@@ -8,72 +8,76 @@
 
 import json
 
-myJson =  open('iris.json', 'r')
-jsonData = myJson.read()
-jsonList = json.loads(jsonData)
+def readAsList(filepath):
+  fp = open(filepath,'r')
+  #list having each line of json as elements
+  jsonList = fp.readlines()
+  fp.close()
+  return jsonList
 
-print("List having each line of json as elements")
-print(jsonList)
-print("\n")
+def readAsListOfDict(filepath):
+  fp = open(filepath,'r')
+  #list having dictionary of objects.
+  jsonData = json.load(fp)
+  fp.close()
+  return jsonData
 
-print("List of Dictionary Objects")
-for i in jsonList:
-  
-  print(i)
-print("\n")
+def printSetosa(jsonList):
+  #printing the details of only setosa.
+  print("\nDetails of flowers of species setosa")
+  for i in jsonList:
+    if(i['species']=='setosa'):
+      print(i)
 
-print("Details of Flowers whose species is Setosa")
-for i in jsonList:
-  if(i['species']=='setosa'):
+def sepalAreaAndPetalArea(jsonList):
+  #list to store species names.
+  listOfSpeciesName = list()
+  for i in jsonList:
+    #appeding the different species name to the list.
+    listOfSpeciesName.append(i['species'])
+  #removing duplicates to get unique speices.
+  listOfSpeciesName = list(set(listOfSpeciesName))
+  #list to store sepal and petal area.
+  sepalArea = list()
+  petalArea = list()
+  for i in listOfSpeciesName:
+    for j in jsonList:
+      if(j['species']==i):
+        sepalArea.append(j['sepalLength']*j['sepalWidth'])
+        petalArea.append(j['petalLength']*j['petalWidth'])
+    print()
+    print(i.capitalize())
+    #printing minimum and maximum areas.
+    print("Maximum Sepal Area in ",i.capitalize()," is ",round(max(sepalArea),2))
+    print("Minimum Petal Area in ",i.capitalize()," is ",round(min(petalArea),2))
+    sepalArea.clear()
+    petalArea.clear()
+    
+def sortTotalArea(jsonList):
+  for i in jsonList:
+    #adding total area to the each dictionary
+    totalArea = (i['petalLength']*i['petalWidth'])+(i['sepalLength']*i['sepalWidth'])
+    i.update({'totalArea':round(totalArea,2)})
+  #list sorted according to total area
+  sortedList = sorted(jsonList,key=lambda i:i['totalArea'])
+  print("\nList sorted on the basis of total area")
+  for i in sortedList:
     print(i)
 
-listOfSpeciesName = list()
-for i in jsonList:
-  
-  listOfSpeciesName.append(i['species'])  
+#path where target file is stored.
+filePath = 'iris.json'
+jsonList = readAsList(filePath)
+print("List with each line as element\n")
+for line in jsonList:
+  print(line)
 
+jsonData = readAsListOfDict(filePath)
+print("\nList of Dictionaries")
+for i in jsonData:
+  for key, values in i.items():
+    print(key.capitalize()+" : ",values,end=" , ")
+  print()
 
-listOfSpeciesName = set(listOfSpeciesName)
-
-print('\n')
-
-sepal_area = list()
-petal_area = list()
-for i in listOfSpeciesName:
-  
-  print(i.capitalize())
-  for j in jsonList:
-    
-    if(j['species']==i):
-      sepal_area.append(j['sepalLength']*j['sepalWidth'])
-      petal_area.append(j['petalLength']*j['petalWidth'])
-  
-  print("Maximum Sepal Area in ",i.capitalize()," is ",round(max(sepal_area),2))
-  print("Minimum Petal Area in ",i.capitalize()," is ",round(min(petal_area),2))  
-  print('\n')
-  
-  sepal_area.clear()
-  petal_area.clear()
-print('\n')
-
-
-jsonListCopy = list()
-jsonListCopy = jsonList
-for i in jsonListCopy:
-  
-  petalArea = (i["petalLength"]*i["petalWidth"])
-  sepalArea = (i["sepalLength"]*i["sepalWidth"])
-  totalArea = (petalArea+sepalArea)
-  
-  
-  i.update({'totalArea':totalArea})
-
-sortedList = (sorted(jsonListCopy, key = lambda i:i['totalArea'] ))
-
-print("The Sorted List")
-
-for i in sortedList:
-  
-  print(i)
-
-myJson.close()
+printSetosa(jsonData)
+sepalAreaAndPetalArea(jsonData)
+sortTotalArea(jsonData)
